@@ -1,14 +1,21 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>IDEAL PUBLIC SCHOOL • Live Room</title>
+<head>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
+<title>IDEAL PUBLIC SCHOOL • Secure Live Class</title>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -22,12 +29,13 @@ body{
 
 .top{
   background:#087443;
-  padding:14px 16px;
+  padding:16px;
   font-weight:700;
+  font-size:20px;
 }
 
 .wrap{
-  max-width:1050px;
+  max-width:1100px;
   margin:auto;
   padding:14px;
 }
@@ -36,21 +44,21 @@ body{
   background:#101c17;
   border:1px solid #29483b;
   border-radius:14px;
-  padding:12px;
-  margin-bottom:12px;
+  padding:14px;
+  margin-bottom:14px;
 }
 
 .grid{
   display:grid;
   grid-template-columns:2fr 1fr;
-  gap:12px;
+  gap:14px;
 }
 
 .video{
   background:#000;
   border-radius:12px;
   overflow:hidden;
-  min-height:260px;
+  min-height:280px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -59,7 +67,7 @@ body{
 .video video{
   width:100%;
   height:100%;
-  min-height:260px;
+  min-height:280px;
   object-fit:contain;
   background:#000;
 }
@@ -72,26 +80,24 @@ body{
   display:block;
 }
 
-.studentLocal{
-  display:none;
-}
-
 .status{
-  padding:10px;
-  border-radius:9px;
+  padding:12px;
+  border-radius:10px;
   background:#17251f;
   color:#d9f7e8;
+  line-height:1.5;
 }
 
 .btn{
   border:0;
   border-radius:9px;
-  padding:11px 14px;
+  padding:11px 15px;
   background:#0a9860;
   color:#fff;
   font-weight:700;
   cursor:pointer;
   margin:5px 5px 0 0;
+  font-size:15px;
 }
 
 .btn:disabled{
@@ -112,8 +118,9 @@ body{
 }
 
 .comment{
-  padding:9px;
+  padding:10px;
   border-bottom:1px solid #29483b;
+  line-height:1.5;
 }
 
 .row{
@@ -144,6 +151,17 @@ small{
   gap:4px;
 }
 
+.debug{
+  margin-top:10px;
+  padding:10px;
+  border-radius:8px;
+  background:#07110d;
+  border:1px solid #29483b;
+  font-size:12px;
+  color:#9db5aa;
+  word-break:break-word;
+}
+
 @media(max-width:760px){
 
   .grid{
@@ -159,148 +177,190 @@ small{
     padding:10px;
   }
 
+  .top{
+    font-size:18px;
+  }
+
 }
+
 </style>
+
 </head>
 
+
 <body>
+
 
 <div class="top">
 🏫 IDEAL PUBLIC SCHOOL • SECURE LIVE CLASS
 </div>
 
+
 <div class="wrap">
 
-<!-- CONNECTION CARD -->
+
+<!-- CONNECTION -->
+
 <div class="card">
 
-  <b id="title">Connecting…</b>
+  <b id="title">
+    Connecting…
+  </b>
 
-  <div id="status"
-       class="status"
-       style="margin-top:8px">
+  <div
+    id="status"
+    class="status"
+    style="margin-top:8px"
+  >
     Preparing live room…
   </div>
 
-  <div id="actions"
-       style="margin-top:8px">
-  </div>
+  <div
+    id="actions"
+    style="margin-top:8px"
+  ></div>
 
 </div>
 
 
 <div class="grid">
 
-<!-- LEFT SIDE -->
+
+<!-- LEFT -->
+
 <div>
 
-  <!-- TEACHER LIVE VIDEO -->
-  <div class="card">
 
-    <h3>📹 Teacher Live Video</h3>
+<!-- TEACHER CAMERA -->
 
-    <div class="video">
+<div
+  class="card teacherLocal"
+  id="teacherCameraCard"
+>
 
-      <video
-        id="remote"
-        autoplay
-        playsinline>
-      </video>
+  <h3>
+    🎥 Teacher Camera & Microphone
+  </h3>
 
-    </div>
+
+  <div class="video">
+
+    <video
+      id="local"
+      autoplay
+      muted
+      playsinline
+    ></video>
 
   </div>
 
 
-  <!-- TEACHER CAMERA -->
   <div
-    class="card teacherLocal"
-    id="teacherCameraCard">
+    id="cameraStatus"
+    class="status"
+    style="margin-top:8px"
+  >
+    Camera बंद है
+  </div>
 
-    <h3>🎥 Teacher Camera & Microphone</h3>
 
-    <div class="video">
+  <div class="cameraButtons">
 
-      <video
-        id="local"
-        autoplay
-        muted
-        playsinline>
-      </video>
+    <button
+      class="btn"
+      id="startCam"
+    >
+      🎥 Start Camera & Mic
+    </button>
 
-    </div>
 
-    <div
-      id="cameraStatus"
-      class="status"
-      style="margin-top:8px">
+    <button
+      class="btn"
+      id="switchCam"
+      disabled
+    >
+      🔄 Back Camera
+    </button>
 
-      Camera बंद है
 
-    </div>
+    <button
+      class="btn danger"
+      id="stopCam"
+      disabled
+    >
+      ⛔ Stop Camera
+    </button>
 
-    <div class="cameraButtons">
+  </div>
 
-      <button
-        class="btn"
-        id="startCam">
 
-        🎥 Start Camera & Mic
+  <div
+    id="debug"
+    class="debug"
+  >
+    System checking…
+  </div>
 
-      </button>
+</div>
 
-      <button
-        class="btn"
-        id="switchCam"
-        disabled>
 
-        🔄 Back Camera
+<!-- TEACHER VIDEO FOR STUDENT -->
 
-      </button>
+<div class="card">
 
-      <button
-        class="btn danger"
-        id="stopCam"
-        disabled>
+  <h3>
+    📹 Teacher Live Video
+  </h3>
 
-        ⛔ Stop Camera
+  <div class="video">
 
-      </button>
-
-    </div>
+    <video
+      id="remote"
+      autoplay
+      playsinline
+    ></video>
 
   </div>
 
 </div>
 
 
-<!-- RIGHT SIDE -->
+</div>
+
+
+<!-- RIGHT -->
+
 <div class="card">
 
-  <h3>💬 Student Doubts</h3>
+  <h3>
+    💬 Student Doubts
+  </h3>
+
 
   <div
     id="comments"
-    class="comments">
-  </div>
+    class="comments"
+  ></div>
+
 
   <div
     id="studentChat"
-    style="margin-top:10px">
+    style="margin-top:10px"
+  >
 
     <div class="row">
 
       <input
         class="input"
         id="q"
-        placeholder="Ask teacher…">
+        placeholder="Ask teacher…"
+      >
 
       <button
         class="btn"
-        id="send">
-
+        id="send"
+      >
         Send
-
       </button>
 
     </div>
@@ -309,36 +369,48 @@ small{
 
 </div>
 
+
 </div>
+
 </div>
 
 
 <script>
 
+
 /* =====================================================
-   BASIC DATA
+   URL DATA
 ===================================================== */
 
 const p =
-  new URLSearchParams(location.search);
+  new URLSearchParams(
+    location.search
+  );
+
 
 const liveId =
   p.get('liveId') || '';
 
+
 const role =
   p.get('role') || 'student';
+
 
 const userId =
   p.get('userId') || '';
 
+
 const name =
   p.get('name') || '';
+
 
 const cls =
   p.get('className') || '';
 
+
 const appUrl =
   p.get('webAppUrl') || '';
+
 
 
 /* =====================================================
@@ -360,12 +432,15 @@ let peerCalls = [];
 let cameraFacing = 'user';
 
 
+
 /* =====================================================
    SHORTCUT
 ===================================================== */
 
 const $ =
-  id => document.getElementById(id);
+  id =>
+  document.getElementById(id);
+
 
 
 /* =====================================================
@@ -374,20 +449,41 @@ const $ =
 
 function st(text){
 
-  $('status').textContent = text;
+  $('status').textContent =
+    text;
 
 }
 
 
+
 /* =====================================================
-   ERROR
+   FAIL
 ===================================================== */
 
 function fail(text){
 
-  st('❌ ' + text);
+  st(text);
 
 }
+
+
+
+/* =====================================================
+   DEBUG
+===================================================== */
+
+function debug(text){
+
+  $('debug').textContent =
+    text;
+
+  console.log(
+    '[LIVE]',
+    text
+  );
+
+}
+
 
 
 /* =====================================================
@@ -396,80 +492,96 @@ function fail(text){
 
 function api(action,data){
 
-  return new Promise((resolve,reject)=>{
+  return new Promise(
+    (resolve,reject)=>{
 
-    if(!appUrl){
+      if(!appUrl){
 
-      reject(
-        new Error(
-          'School app URL missing'
-        )
+        reject(
+          new Error(
+            'School app URL missing'
+          )
+        );
+
+        return;
+      }
+
+
+      const cb =
+        'cb_' +
+        Date.now() +
+        '_' +
+        Math.random()
+          .toString(36)
+          .slice(2);
+
+
+      const script =
+        document.createElement(
+          'script'
+        );
+
+
+      window[cb] =
+        result => {
+
+          try{
+            delete window[cb];
+          }catch(e){}
+
+          script.remove();
+
+          resolve(result);
+
+        };
+
+
+      script.onerror =
+        () => {
+
+          try{
+            delete window[cb];
+          }catch(e){}
+
+          script.remove();
+
+          reject(
+            new Error(
+              'School server unavailable'
+            )
+          );
+
+        };
+
+
+      script.src =
+        appUrl +
+        '?api=1' +
+        '&action=' +
+        encodeURIComponent(
+          action
+        ) +
+        '&data=' +
+        encodeURIComponent(
+          JSON.stringify(data)
+        ) +
+        '&callback=' +
+        cb;
+
+
+      document.body.appendChild(
+        script
       );
 
-      return;
     }
-
-    const cb =
-      'cb_' +
-      Date.now() +
-      '_' +
-      Math.random()
-        .toString(36)
-        .slice(2);
-
-    const script =
-      document.createElement('script');
-
-    window[cb] =
-      result => {
-
-        try{
-          delete window[cb];
-        }catch(e){}
-
-        script.remove();
-
-        resolve(result);
-
-      };
-
-    script.onerror = () => {
-
-      try{
-        delete window[cb];
-      }catch(e){}
-
-      script.remove();
-
-      reject(
-        new Error(
-          'School server unavailable'
-        )
-      );
-
-    };
-
-    script.src =
-      appUrl +
-      '?api=1' +
-      '&action=' +
-      encodeURIComponent(action) +
-      '&data=' +
-      encodeURIComponent(
-        JSON.stringify(data)
-      ) +
-      '&callback=' +
-      cb;
-
-    document.body.appendChild(script);
-
-  });
+  );
 
 }
 
 
+
 /* =====================================================
-   UI SETUP
+   UI
 ===================================================== */
 
 function setupUI(){
@@ -488,18 +600,11 @@ function setupUI(){
       .classList
       .add('active');
 
+
     $('studentChat')
       .style
-      .display = 'none';
-
-    $('actions').innerHTML =
-
-      '<button class="btn" id="openCamera">' +
-      '🎥 Start Camera & Mic' +
-      '</button>';
-
-    $('openCamera').onclick =
-      startTeacherCamera;
+      .display =
+      'none';
 
   }
 
@@ -507,11 +612,13 @@ function setupUI(){
 
     $('teacherCameraCard')
       .style
-      .display = 'none';
+      .display =
+      'none';
 
   }
 
 }
+
 
 
 /* =====================================================
@@ -523,8 +630,14 @@ async function makePeer(){
   return new Promise(
     (resolve,reject)=>{
 
+      debug(
+        'Connecting to PeerJS…'
+      );
+
+
       peer =
         new Peer();
+
 
       peer.on(
         'open',
@@ -532,8 +645,8 @@ async function makePeer(){
 
           ready = true;
 
-          console.log(
-            'Peer connected:',
+          debug(
+            'PeerJS connected. ID: ' +
             id
           );
 
@@ -552,14 +665,24 @@ async function makePeer(){
             error
           );
 
+
           fail(
-            'Connection error: ' +
+            '❌ PeerJS error: ' +
             (
               error.type ||
-              error.message ||
-              'PeerJS'
+              error.message
             )
           );
+
+
+          debug(
+            'PeerJS error: ' +
+            (
+              error.type ||
+              error.message
+            )
+          );
+
 
           reject(error);
 
@@ -572,8 +695,9 @@ async function makePeer(){
         () => {
 
           st(
-            'Connection interrupted. Reconnecting…'
+            '⚠️ PeerJS disconnected. Reconnecting…'
           );
+
 
           try{
 
@@ -597,18 +721,19 @@ async function makePeer(){
       );
 
 
-      /*
-        TEACHER RECEIVES STUDENT CALL
-      */
+      /* =====================================
+         TEACHER RECEIVES STUDENT
+      ===================================== */
 
       peer.on(
         'call',
         call => {
 
           console.log(
-            'Incoming call from:',
+            'Incoming student call:',
             call.peer
           );
+
 
           if(role !== 'teacher'){
 
@@ -616,10 +741,11 @@ async function makePeer(){
 
           }
 
+
           if(!stream){
 
             console.log(
-              'Teacher camera not ready'
+              'Teacher stream unavailable'
             );
 
             call.close();
@@ -628,32 +754,41 @@ async function makePeer(){
 
           }
 
-          call.answer(stream);
+
+          call.answer(
+            stream
+          );
+
+
+          peerCalls.push(
+            call
+          );
+
 
           call.on(
             'close',
             () => {
 
-              console.log(
-                'Student call closed'
-              );
+              peerCalls =
+                peerCalls.filter(
+                  x => x !== call
+                );
 
             }
           );
+
 
           call.on(
             'error',
             error => {
 
               console.error(
-                'Call error:',
+                'Teacher call error:',
                 error
               );
 
             }
           );
-
-          peerCalls.push(call);
 
         }
       );
@@ -664,6 +799,7 @@ async function makePeer(){
 }
 
 
+
 /* =====================================================
    START TEACHER CAMERA
 ===================================================== */
@@ -672,17 +808,18 @@ async function startTeacherCamera(){
 
   try{
 
-    /*
-      HTTPS CHECK
-    */
+    /* =====================================
+       HTTPS CHECK
+    ===================================== */
 
-    if(
-      !window.isSecureContext
-    ){
+    if(!window.isSecureContext){
+
+      $('cameraStatus')
+        .textContent =
+        '❌ HTTPS जरूरी है।';
 
       fail(
-        'Camera के लिए HTTPS जरूरी है। ' +
-        'Live Room को HTTPS link से खोलें।'
+        '❌ Camera के लिए HTTPS जरूरी है।'
       );
 
       return;
@@ -690,17 +827,21 @@ async function startTeacherCamera(){
     }
 
 
-    /*
-      CAMERA API CHECK
-    */
+    /* =====================================
+       CAMERA API CHECK
+    ===================================== */
 
     if(
       !navigator.mediaDevices ||
       !navigator.mediaDevices.getUserMedia
     ){
 
+      $('cameraStatus')
+        .textContent =
+        '❌ Camera API उपलब्ध नहीं है।';
+
       fail(
-        'इस browser में Camera/Microphone उपलब्ध नहीं है। Chrome में Live Room खोलें।'
+        '❌ इस Chrome में Camera API उपलब्ध नहीं है।'
       );
 
       return;
@@ -708,96 +849,268 @@ async function startTeacherCamera(){
     }
 
 
+    $('startCam')
+      .disabled =
+      true;
+
+
     $('cameraStatus')
       .textContent =
-      'Camera और Microphone permission मांगी जा रही है…';
+      '📷 Camera permission मांगी जा रही है…';
 
 
-    $('startCam')
-      .disabled = true;
+    debug(
+      'Requesting camera permission…'
+    );
 
 
-    /*
-      OLD STREAM STOP
-    */
+    /* =====================================
+       STEP 1
+       CAMERA ONLY
+    ===================================== */
 
-    if(stream){
+    let videoStream;
 
-      stream
-        .getTracks()
-        .forEach(
-          track => track.stop()
+
+    try{
+
+      videoStream =
+        await navigator
+          .mediaDevices
+          .getUserMedia({
+
+            video:{
+              facingMode:{
+                ideal:
+                  cameraFacing
+              },
+
+              width:{
+                ideal:1280
+              },
+
+              height:{
+                ideal:720
+              }
+
+            },
+
+            audio:false
+
+          });
+
+
+    }
+
+    catch(cameraError){
+
+      console.error(
+        'CAMERA ERROR:',
+        cameraError
+      );
+
+
+      $('startCam')
+        .disabled =
+        false;
+
+
+      $('cameraStatus')
+        .textContent =
+        '❌ Camera Error: ' +
+        cameraError.name;
+
+
+      debug(
+        'Camera Error: ' +
+        cameraError.name +
+        ' | ' +
+        cameraError.message
+      );
+
+
+      if(
+        cameraError.name ===
+        'NotAllowedError'
+      ){
+
+        fail(
+          '❌ Camera permission Chrome में Block है।'
         );
 
-      stream = null;
+      }
+
+      else if(
+        cameraError.name ===
+        'NotFoundError'
+      ){
+
+        fail(
+          '❌ Camera device नहीं मिला।'
+        );
+
+      }
+
+      else if(
+        cameraError.name ===
+        'NotReadableError'
+      ){
+
+        fail(
+          '❌ Camera किसी दूसरे app में इस्तेमाल हो रहा है।'
+        );
+
+      }
+
+      else{
+
+        fail(
+          '❌ Camera Error: ' +
+          cameraError.name
+        );
+
+      }
+
+
+      return;
 
     }
 
 
-    /*
-      REQUEST CAMERA + MICROPHONE
-    */
 
-    stream =
-      await navigator
-        .mediaDevices
-        .getUserMedia({
+    /* =====================================
+       CAMERA SUCCESS
+    ===================================== */
 
-          video:{
-
-            facingMode:{
-              ideal:cameraFacing
-            },
-
-            width:{
-              ideal:1280
-            },
-
-            height:{
-              ideal:720
-            }
-
-          },
-
-          audio:{
-
-            echoCancellation:true,
-
-            noiseSuppression:true,
-
-            autoGainControl:true
-
-          }
-
-        });
+    debug(
+      '✅ Camera permission successful.'
+    );
 
 
-    /*
-      SHOW LOCAL VIDEO
-    */
-
-    $('local')
-      .srcObject = stream;
-
-
-    $('stopCam')
-      .disabled = false;
-
-
-    $('switchCam')
-      .disabled = false;
-
+    /* =====================================
+       STEP 2
+       MICROPHONE
+    ===================================== */
 
     $('cameraStatus')
       .textContent =
-      cameraFacing === 'environment'
-        ? '🟢 Back Camera + Microphone चालू है'
-        : '🟢 Front Camera + Microphone चालू है';
+      '🟢 Camera चालू है। Microphone check हो रहा है…';
 
 
-    /*
-      CREATE PEER
-    */
+    let audioStream;
+
+
+    try{
+
+      audioStream =
+        await navigator
+          .mediaDevices
+          .getUserMedia({
+
+            video:false,
+
+            audio:{
+              echoCancellation:true,
+              noiseSuppression:true,
+              autoGainControl:true
+            }
+
+          });
+
+
+      debug(
+        '✅ Microphone permission successful.'
+      );
+
+    }
+
+    catch(micError){
+
+      console.warn(
+        'MIC ERROR:',
+        micError
+      );
+
+
+      audioStream =
+        new MediaStream();
+
+
+      debug(
+        '⚠️ Microphone Error: ' +
+        micError.name
+      );
+
+    }
+
+
+
+    /* =====================================
+       COMBINE STREAM
+    ===================================== */
+
+    stream =
+      new MediaStream([
+
+        ...videoStream
+          .getVideoTracks(),
+
+        ...audioStream
+          .getAudioTracks()
+
+      ]);
+
+
+
+    /* =====================================
+       SHOW LOCAL VIDEO
+    ===================================== */
+
+    $('local')
+      .srcObject =
+      stream;
+
+
+    $('local').muted =
+      true;
+
+
+    try{
+
+      await $('local')
+        .play();
+
+    }
+
+    catch(e){
+
+      console.log(
+        'Local play:',
+        e
+      );
+
+    }
+
+
+
+    /* =====================================
+       BUTTONS
+    ===================================== */
+
+    $('stopCam')
+      .disabled =
+      false;
+
+
+    $('switchCam')
+      .disabled =
+      false;
+
+
+
+    /* =====================================
+       PEER
+    ===================================== */
 
     if(!peer){
 
@@ -806,24 +1119,64 @@ async function startTeacherCamera(){
     }
 
 
-    /*
-      SEND TEACHER PEER ID
-      TO SCHOOL SERVER
-    */
 
-    const result =
-      await api(
-        'setTeacherPeerId',
-        {
+    /* =====================================
+       REGISTER PEER ID
+    ===================================== */
 
-          liveId:liveId,
+    let result;
 
-          teacherId:userId,
 
-          peerId:peer.id
+    try{
 
-        }
+      result =
+        await api(
+          'setTeacherPeerId',
+          {
+
+            liveId:
+              liveId,
+
+            teacherId:
+              userId,
+
+            peerId:
+              peer.id
+
+          }
+        );
+
+
+    }
+
+    catch(serverError){
+
+      console.error(
+        'SERVER ERROR:',
+        serverError
       );
+
+
+      $('cameraStatus')
+        .textContent =
+        '🟢 Camera चालू है';
+
+
+      st(
+        '⚠️ Camera चालू है लेकिन School Server से connection नहीं हुआ।'
+      );
+
+
+      debug(
+        'Server Error: ' +
+        serverError.message
+      );
+
+
+      return;
+
+    }
+
 
 
     if(
@@ -832,17 +1185,58 @@ async function startTeacherCamera(){
     ){
 
       st(
-        '⚠️ Camera चालू है लेकिन Live server से connection नहीं हुआ।'
+        '⚠️ Camera चालू है लेकिन Teacher ID server में save नहीं हुई।'
       );
+
+
+      debug(
+        'Server rejected Teacher Peer ID.'
+      );
+
 
       return;
 
     }
 
 
+
+    /* =====================================
+       SUCCESS
+    ===================================== */
+
+    const micOK =
+      stream
+        .getAudioTracks()
+        .length > 0;
+
+
+    if(micOK){
+
+      $('cameraStatus')
+        .textContent =
+        '🟢 Camera + Microphone चालू है';
+
+    }
+
+    else{
+
+      $('cameraStatus')
+        .textContent =
+        '🟢 Camera चालू है | ⚠️ Microphone नहीं मिला';
+
+    }
+
+
     st(
-      '🟢 Live शुरू हो गया। Students अब join कर सकते हैं।'
+      '🟢 Teacher Live शुरू हो गया। Students अब join कर सकते हैं।'
     );
+
+
+    debug(
+      '✅ Teacher Live Ready | Peer ID: ' +
+      peer.id
+    );
+
 
 
   }
@@ -850,82 +1244,55 @@ async function startTeacherCamera(){
   catch(error){
 
     console.error(
-      'CAMERA ERROR:',
+      'LIVE ERROR:',
       error
     );
 
 
     $('startCam')
-      .disabled = false;
+      .disabled =
+      false;
 
 
     $('stopCam')
-      .disabled = true;
+      .disabled =
+      true;
 
 
     $('switchCam')
-      .disabled = true;
-
-
-    let message =
-      'Camera/Microphone permission नहीं मिली।';
-
-
-    if(
-      error.name ===
-      'NotAllowedError'
-    ){
-
-      message =
-        'Camera/Microphone permission Block है। Chrome में इस site की Camera और Microphone permission Allow करें।';
-
-    }
-
-    else if(
-      error.name ===
-      'NotFoundError'
-    ){
-
-      message =
-        'Camera या Microphone device नहीं मिला।';
-
-    }
-
-    else if(
-      error.name ===
-      'NotReadableError'
-    ){
-
-      message =
-        'Camera किसी दूसरे app में इस्तेमाल हो रहा है। दूसरे camera app को बंद करें।';
-
-    }
-
-    else if(
-      error.name ===
-      'SecurityError'
-    ){
-
-      message =
-        'Browser ने security कारण से Camera access रोक दिया। HTTPS Live Room खोलें।';
-
-    }
+      .disabled =
+      true;
 
 
     $('cameraStatus')
       .textContent =
-      '❌ ' + message;
+      '❌ Error: ' +
+      error.name;
 
 
-    fail(message);
+    fail(
+      '❌ ' +
+      error.name +
+      ' — ' +
+      error.message
+    );
+
+
+    debug(
+      'Live Error: ' +
+      error.name +
+      ' | ' +
+      error.message
+    );
 
   }
 
 }
 
 
+
 /* =====================================================
-   SWITCH FRONT / BACK CAMERA
+   SWITCH CAMERA
 ===================================================== */
 
 async function switchCamera(){
@@ -937,10 +1304,6 @@ async function switchCamera(){
   }
 
 
-  /*
-    CHANGE CAMERA
-  */
-
   cameraFacing =
     cameraFacing === 'user'
       ? 'environment'
@@ -949,19 +1312,15 @@ async function switchCamera(){
 
   try{
 
-    /*
-      GET NEW CAMERA
-    */
-
     const newStream =
       await navigator
         .mediaDevices
         .getUserMedia({
 
           video:{
-
             facingMode:{
-              ideal:cameraFacing
+              ideal:
+                cameraFacing
             },
 
             width:{
@@ -987,16 +1346,15 @@ async function switchCamera(){
     if(!newVideoTrack){
 
       throw new Error(
-        'New camera track missing'
+        'Camera track missing'
       );
 
     }
 
 
-    /*
-      REPLACE VIDEO TRACK
-      IN ALL PEER CALLS
-    */
+    /* =====================================
+       REPLACE TRACK
+    ===================================== */
 
     peerCalls.forEach(
       call => {
@@ -1023,12 +1381,11 @@ async function switchCamera(){
 
           }
 
-        }catch(error){
+        }
 
-          console.error(
-            'Track replace error:',
-            error
-          );
+        catch(e){
+
+          console.error(e);
 
         }
 
@@ -1036,53 +1393,41 @@ async function switchCamera(){
     );
 
 
-    /*
-      OLD VIDEO TRACK STOP
-    */
+    /* =====================================
+       OLD CAMERA STOP
+    ===================================== */
 
-    const oldVideoTrack =
+    const oldVideo =
       stream
         .getVideoTracks()[0];
 
 
-    if(oldVideoTrack){
+    if(oldVideo){
 
-      oldVideoTrack.stop();
+      oldVideo.stop();
 
     }
 
-
-    /*
-      KEEP MICROPHONE
-    */
 
     const audioTracks =
       stream
         .getAudioTracks();
 
 
-    /*
-      CREATE NEW STREAM
-    */
-
     stream =
       new MediaStream([
+
         newVideoTrack,
+
         ...audioTracks
+
       ]);
 
 
-    /*
-      SHOW NEW CAMERA
-    */
-
     $('local')
-      .srcObject = stream;
+      .srcObject =
+      stream;
 
-
-    /*
-      UPDATE BUTTON
-    */
 
     if(
       cameraFacing ===
@@ -1092,6 +1437,7 @@ async function switchCamera(){
       $('switchCam')
         .textContent =
         '🔄 Front Camera';
+
 
       $('cameraStatus')
         .textContent =
@@ -1104,6 +1450,7 @@ async function switchCamera(){
       $('switchCam')
         .textContent =
         '🔄 Back Camera';
+
 
       $('cameraStatus')
         .textContent =
@@ -1122,107 +1469,24 @@ async function switchCamera(){
     );
 
 
-    /*
-      FALLBACK
-    */
-
-    try{
-
-      const newStream =
-        await navigator
-          .mediaDevices
-          .getUserMedia({
-
-            video:{
-              facingMode:
-                cameraFacing
-            },
-
-            audio:false
-
-          });
+    cameraFacing =
+      cameraFacing === 'user'
+        ? 'environment'
+        : 'user';
 
 
-      const newVideoTrack =
-        newStream
-          .getVideoTracks()[0];
-
-
-      peerCalls.forEach(
-        call => {
-
-          try{
-
-            const sender =
-              call
-                .peerConnection
-                ?.getSenders()
-                ?.find(
-                  s =>
-                    s.track &&
-                    s.track.kind ===
-                    'video'
-                );
-
-
-            if(sender){
-
-              sender.replaceTrack(
-                newVideoTrack
-              );
-
-            }
-
-          }catch(e){}
-
-        }
-      );
-
-
-      const oldVideoTrack =
-        stream
-          .getVideoTracks()[0];
-
-
-      if(oldVideoTrack){
-
-        oldVideoTrack.stop();
-
-      }
-
-
-      stream =
-        new MediaStream([
-
-          newVideoTrack,
-
-          ...stream
-            .getAudioTracks()
-
-        ]);
-
-
-      $('local')
-        .srcObject = stream;
-
-
-    }
-
-    catch(finalError){
-
-      alert(
-        'Camera switch नहीं हो पाया। Phone में दूसरा camera उपलब्ध है या नहीं check करें।'
-      );
-
-    }
+    alert(
+      'Camera switch नहीं हो पाया।'
+    );
 
   }
 
 }
 
 
+
 /* =====================================================
-   STOP TEACHER CAMERA
+   STOP CAMERA
 ===================================================== */
 
 function stopTeacherCamera(){
@@ -1232,33 +1496,44 @@ function stopTeacherCamera(){
     stream
       .getTracks()
       .forEach(
-        track => track.stop()
+        track =>
+          track.stop()
       );
 
-    stream = null;
+    stream =
+      null;
 
   }
 
 
   $('local')
-    .srcObject = null;
+    .srcObject =
+    null;
 
 
   $('stopCam')
-    .disabled = true;
+    .disabled =
+    true;
 
 
   $('switchCam')
-    .disabled = true;
+    .disabled =
+    true;
 
 
   $('startCam')
-    .disabled = false;
+    .disabled =
+    false;
 
 
   $('cameraStatus')
     .textContent =
     'Camera बंद है';
+
+
+  debug(
+    'Camera stopped.'
+  );
 
 
   st(
@@ -1268,6 +1543,7 @@ function stopTeacherCamera(){
 }
 
 
+
 /* =====================================================
    TEACHER INIT
 ===================================================== */
@@ -1275,7 +1551,7 @@ function stopTeacherCamera(){
 async function teacherInit(){
 
   st(
-    'Connecting teacher to live server…'
+    'Teacher को PeerJS से connect किया जा रहा है…'
   );
 
 
@@ -1285,7 +1561,7 @@ async function teacherInit(){
 
 
     st(
-      'Connected. Tap “Start Camera & Mic”.'
+      '🟢 Connected. अब Start Camera & Mic दबाएँ।'
     );
 
 
@@ -1293,11 +1569,12 @@ async function teacherInit(){
 
   catch(error){
 
-    return;
+    console.error(error);
 
   }
 
 }
+
 
 
 /* =====================================================
@@ -1307,7 +1584,7 @@ async function teacherInit(){
 async function studentJoin(){
 
   st(
-    'Connecting to live class…'
+    'Student live class से connect हो रहा है…'
   );
 
 
@@ -1322,6 +1599,7 @@ async function studentJoin(){
     return;
 
   }
+
 
 
   async function poll(){
@@ -1339,8 +1617,13 @@ async function studentJoin(){
         await api(
           'getLiveTeacherPeerId',
           {
-            liveId:liveId,
-            className:cls
+
+            liveId:
+              liveId,
+
+            className:
+              cls
+
           }
         );
 
@@ -1348,13 +1631,15 @@ async function studentJoin(){
       if(!result.success){
 
         st(
-          'Waiting for teacher to start camera…'
+          '⏳ Teacher के live शुरू करने का इंतजार…'
         );
+
 
         setTimeout(
           poll,
           2500
         );
+
 
         return;
 
@@ -1364,13 +1649,15 @@ async function studentJoin(){
       if(!result.peerId){
 
         st(
-          'Teacher is connected. Waiting for camera…'
+          '⏳ Teacher camera का इंतजार…'
         );
+
 
         setTimeout(
           poll,
           2000
         );
+
 
         return;
 
@@ -1381,7 +1668,8 @@ async function studentJoin(){
         result.peerId;
 
 
-      $('title').textContent =
+      $('title')
+        .textContent =
         (
           result.title ||
           'Live Class'
@@ -1393,9 +1681,10 @@ async function studentJoin(){
         );
 
 
-      /*
-        CALL TEACHER
-      */
+
+      /* =================================
+         CALL TEACHER
+      ================================= */
 
       const call =
         peer.call(
@@ -1436,11 +1725,12 @@ async function studentJoin(){
             );
 
 
-          joined = true;
+          joined =
+            true;
 
 
           st(
-            '🟢 Live video connected.'
+            '🟢 Teacher Live Video Connected.'
           );
 
         }
@@ -1451,7 +1741,9 @@ async function studentJoin(){
         'close',
         () => {
 
-          joined = false;
+          joined =
+            false;
+
 
           st(
             'Teacher connection ended. Waiting…'
@@ -1477,7 +1769,8 @@ async function studentJoin(){
           );
 
 
-          joined = false;
+          joined =
+            false;
 
 
           setTimeout(
@@ -1513,8 +1806,9 @@ async function studentJoin(){
 }
 
 
+
 /* =====================================================
-   SEND STUDENT DOUBT
+   SEND DOUBT
 ===================================================== */
 
 async function sendDoubt(){
@@ -1539,15 +1833,20 @@ async function sendDoubt(){
         'sendLiveDoubt',
         {
 
-          liveId:liveId,
+          liveId:
+            liveId,
 
-          studentId:userId,
+          studentId:
+            userId,
 
-          studentName:name,
+          studentName:
+            name,
 
-          className:cls,
+          className:
+            cls,
 
-          question:text
+          question:
+            text
 
         }
       );
@@ -1555,7 +1854,8 @@ async function sendDoubt(){
 
     if(result.success){
 
-      $('q').value = '';
+      $('q').value =
+        '';
 
       refreshDoubts();
 
@@ -1575,12 +1875,13 @@ async function sendDoubt(){
   catch(error){
 
     alert(
-      'Could not reach school server.'
+      'School server से connection नहीं हो पाया।'
     );
 
   }
 
 }
+
 
 
 /* =====================================================
@@ -1600,8 +1901,13 @@ async function refreshDoubts(){
         await api(
           'getLiveDoubts',
           {
-            liveId:liveId,
-            teacherId:userId
+
+            liveId:
+              liveId,
+
+            teacherId:
+              userId
+
           }
         );
 
@@ -1613,8 +1919,13 @@ async function refreshDoubts(){
         await api(
           'getStudentLiveDoubts',
           {
-            liveId:liveId,
-            studentId:userId
+
+            liveId:
+              liveId,
+
+            studentId:
+              userId
+
           }
         );
 
@@ -1631,11 +1942,9 @@ async function refreshDoubts(){
     $('comments')
       .innerHTML =
 
-
       data
         .map(
           item => {
-
 
             if(role === 'teacher'){
 
@@ -1662,24 +1971,31 @@ async function refreshDoubts(){
 
                     ${
                       item.Reply
-                        ? escapeHtml(
-                            item.Reply
-                          )
-                        : 'Waiting for teacher reply…'
+                      ?
+                      escapeHtml(
+                        item.Reply
+                      )
+                      :
+                      'Waiting for teacher reply…'
                     }
 
                   </small>
 
                   ${
                     item.Reply
-                    ? ''
+                    ?
+                    ''
                     :
-                    `<br>
-                     <button
-                       class="btn"
-                       onclick="replyDoubt('${escapeHtml(item.DoubtID)}')">
-                       Reply
-                     </button>`
+                    `
+                    <br>
+
+                    <button
+                      class="btn"
+                      onclick="replyDoubt('${escapeHtml(item.DoubtID)}')"
+                    >
+                      Reply
+                    </button>
+                    `
                   }
 
                 </div>
@@ -1706,10 +2022,12 @@ async function refreshDoubts(){
 
                   ${
                     item.Reply
-                      ? escapeHtml(
-                          item.Reply
-                        )
-                      : 'Waiting for teacher reply…'
+                    ?
+                    escapeHtml(
+                      item.Reply
+                    )
+                    :
+                    'Waiting for teacher reply…'
                   }
 
                 </small>
@@ -1721,7 +2039,6 @@ async function refreshDoubts(){
           }
         )
         .join('')
-
 
       ||
 
@@ -1740,6 +2057,7 @@ async function refreshDoubts(){
   }
 
 }
+
 
 
 /* =====================================================
@@ -1767,11 +2085,14 @@ async function replyDoubt(id){
       'replyLiveDoubt',
       {
 
-        doubtId:id,
+        doubtId:
+          id,
 
-        teacherId:userId,
+        teacherId:
+          userId,
 
-        reply:reply
+        reply:
+          reply
 
       }
     );
@@ -1792,72 +2113,87 @@ async function replyDoubt(id){
 }
 
 
+
 /* =====================================================
    ESCAPE HTML
 ===================================================== */
 
 function escapeHtml(value){
 
-  return String(value || '')
-    .replace(
-      /&/g,
-      '&amp;'
-    )
-    .replace(
-      /</g,
-      '&lt;'
-    )
-    .replace(
-      />/g,
-      '&gt;'
-    )
-    .replace(
-      /"/g,
-      '&quot;'
-    )
-    .replace(
-      /'/g,
-      '&#039;'
-    );
+  return String(
+    value || ''
+  )
+
+  .replace(
+    /&/g,
+    '&amp;'
+  )
+
+  .replace(
+    /</g,
+    '&lt;'
+  )
+
+  .replace(
+    />/g,
+    '&gt;'
+  )
+
+  .replace(
+    /"/g,
+    '&quot;'
+  )
+
+  .replace(
+    /'/g,
+    '&#039;'
+  );
 
 }
+
 
 
 /* =====================================================
    BUTTONS
 ===================================================== */
 
-$('send').onclick =
+$('send')
+  .onclick =
   sendDoubt;
 
 
-$('q').addEventListener(
-  'keydown',
-  event => {
+$('q')
+  .addEventListener(
+    'keydown',
+    event => {
 
-    if(
-      event.key ===
-      'Enter'
-    ){
+      if(
+        event.key ===
+        'Enter'
+      ){
 
-      sendDoubt();
+        sendDoubt();
+
+      }
 
     }
-
-  }
-);
+  );
 
 
-$('startCam').onclick =
+$('startCam')
+  .onclick =
   startTeacherCamera;
 
 
-$('switchCam').onclick =
+$('switchCam')
+  .onclick =
   switchCamera;
 
 
-$('stopCam').onclick =
+$('stopCam')
+  .onclick =
   stopTeacherCamera;
+
 
 
 /* =====================================================
@@ -1873,7 +2209,8 @@ window.addEventListener(
       stream
         .getTracks()
         .forEach(
-          track => track.stop()
+          track =>
+            track.stop()
         );
 
     }
@@ -1889,8 +2226,9 @@ window.addEventListener(
 );
 
 
+
 /* =====================================================
-   START APPLICATION
+   START APP
 ===================================================== */
 
 (async function(){
@@ -1898,9 +2236,9 @@ window.addEventListener(
   setupUI();
 
 
-  /*
-    REQUIRED INFORMATION
-  */
+  /* =====================================
+     REQUIRED DATA
+  ===================================== */
 
   if(
     !liveId ||
@@ -1908,16 +2246,25 @@ window.addEventListener(
     !appUrl
   ){
 
-    return fail(
-      'Missing live class information. Please open Live from the School App.'
+    fail(
+      '❌ Missing live class information. School App से Live खोलें।'
     );
+
+
+    debug(
+      'Required URL data missing: liveId / userId / webAppUrl'
+    );
+
+
+    return;
 
   }
 
 
-  /*
-    TEACHER
-  */
+
+  /* =====================================
+     TEACHER
+  ===================================== */
 
   if(
     role === 'teacher'
@@ -1928,9 +2275,10 @@ window.addEventListener(
   }
 
 
-  /*
-    STUDENT
-  */
+
+  /* =====================================
+     STUDENT
+  ===================================== */
 
   else{
 
@@ -1939,9 +2287,10 @@ window.addEventListener(
   }
 
 
-  /*
-    DOUBTS
-  */
+
+  /* =====================================
+     DOUBTS
+  ===================================== */
 
   refreshDoubts();
 
@@ -1951,9 +2300,11 @@ window.addEventListener(
     3000
   );
 
+
 })();
 
 </script>
 
 </body>
+
 </html>
