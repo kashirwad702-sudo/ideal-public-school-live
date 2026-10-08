@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IDEAL PUBLIC SCHOOL • Live Room</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#07110d;color:#fff}.top{background:#087443;padding:14px 16px;font-weight:700}.wrap{max-width:1050px;margin:auto;padding:14px}.card{background:#101c17;border:1px solid #29483b;border-radius:14px;padding:12px;margin-bottom:12px}.grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}.video{background:#000;border-radius:12px;overflow:hidden;min-height:260px;display:flex;align-items:center;justify-content:center}.video video{width:100%;height:100%;min-height:260px;object-fit:contain;background:#000}.teacherLocal{display:none}.teacherLocal.active{display:block}.studentLocal{display:none}.status{padding:10px;border-radius:9px;background:#17251f;color:#d9f7e8}.btn{border:0;border-radius:9px;padding:11px 14px;background:#0a9860;color:#fff;font-weight:700;cursor:pointer;margin:5px 5px 0 0}.btn:disabled{opacity:.5}.danger{background:#c93b3b}.comments{height:280px;overflow:auto;border:1px solid #29483b;border-radius:10px;padding:8px}.comment{padding:9px;border-bottom:1px solid #29483b}.row{display:flex;gap:8px}.row input{flex:1}.input{width:100%;padding:11px;border:1px solid #355448;border-radius:9px;background:#0b1712;color:#fff}small{color:#9db5aa}@media(max-width:760px){.grid{grid-template-columns:1fr}.video,.video video{min-height:220px}.wrap{padding:10px}}
+</style>
+</head>
+<body>
+<div class="top">🏫 IDEAL PUBLIC SCHOOL • SECURE LIVE CLASS</div>
+<div class="wrap">
+<div class="card">
+  <b id="title">Connecting…</b>
+  <div id="status" class="status" style="margin-top:8px">Preparing live room…</div>
+  <div id="actions" style="margin-top:8px"></div>
+</div>
+<div class="grid">
+  <div>
+    <div class="card">
+      <h3>📹 Teacher Live Video</h3>
+      <div class="video"><video id="remote" autoplay playsinline></video></div>
+    </div>
+    <div class="card teacherLocal" id="teacherCameraCard">
+      <h3>🎥 Your Camera & Microphone</h3>
+      <div class="video"><video id="local" autoplay muted playsinline></video></div>
+      <button class="btn" id="startCam">Start Camera & Mic</button>
+      <button class="btn danger" id="stopCam" disabled>Stop Camera</button>
+    </div>
+  </div>
+  <div class="card">
+    <h3>💬 Student Doubts</h3>
+    <div id="comments" class="comments"></div>
+    <div id="studentChat" style="margin-top:10px">
+      <div class="row"><input class="input" id="q" placeholder="Ask teacher…"><button class="btn" id="send">Send</button></div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+const p=new URLSearchParams(location.search);
+const liveId=p.get('liveId')||'',role=p.get('role')||'student',userId=p.get('userId')||'',name=p.get('name')||'',cls=p.get('className')||'',appUrl=p.get('webAppUrl')||'';
+let peer=null,stream=null,teacherPeer='',ready=false,joined=false,peerCalls=[];
+const $=id=>document.getElementById(id);
+function st(x){$('status').textContent=x}
+function fail(x){st('❌ '+x)}
+function api(action,data){return new Promise((ok,no)=>{if(!appUrl)return no(new Error('School app URL missing'));const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');window[cb]=r=>{try{delete window[cb]}catch(e){}s.remove();ok(r)};s.onerror=()=>{try{delete window[cb]}catch(e){}s.remove();no(new Error('School server unavailable'))};s.src=appUrl+'?api=1&action='+encodeURIComponent(action)+'&data='+encodeURIComponent(JSON.stringify(data))+'&callback='+cb;document.body.appendChild(s)})}
+function setupUI(){
+ $('title').textContent=(role==='teacher'?'Teacher Live Room':('Class '+cls+' • Live Class'));
+ if(role==='teacher'){$('teacherCameraCard').classList.add('active');$('studentChat').style.display='none';$('actions').innerHTML='<button class="btn" id="openCamera">Start Camera & Mic</button>';$('openCamera').onclick=startTeacherCamera;}
+ else {$('teacherCameraCard').style.display='none';}
+}
+async function makePeer(){
+ return new Promise((resolve,reject)=>{
+   peer=new Peer();
+   peer.on('open',id=>{ready=true;resolve(id)});
+   peer.on('error',e=>{console.error(e);fail('Connection error: '+(e.type||e.message||'PeerJS'));reject(e)});
+   peer.on('disconnected',()=>st('Connection interrupted. Reconnecting…'));
+   peer.on('close',()=>st('Live connection closed.'));
+   peer.on('call',call=>{
+     if(role==='teacher'){
+       if(!stream){call.close();return}
+       call.answer(stream);
+       call.on('close',()=>{});
+       peerCalls.push(call);
+     }
+   });
+ });
+}
+async function startTeacherCamera(){
+ if(stream)return;
+ if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){return fail('Camera requires an HTTPS Live Room. Do not open this page from a file:// or Apps Script page.')}
+ try{
+   $('openCamera')?.setAttribute('disabled','disabled');
+   st('Requesting phone camera and microphone permission…');
+   stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:true});
+   $('local').srcObject=stream;$('stopCam').disabled=false;$('openCamera')?.setAttribute('disabled','disabled');
+   if(!peer)await makePeer();
+   await api('setTeacherPeerId',{liveId,teacherId:userId,peerId:peer.id});
+   st('🟢 Live started. Students can now join.');
+ }catch(e){console.error(e);stream=null;$('stopCam').disabled=true;$('openCamera')?.removeAttribute('disabled');fail('Camera/microphone permission was not allowed. Please allow Camera + Microphone in your phone browser settings.');}
+}
+function stopTeacherCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('local').srcObject=null;$('stopCam').disabled=true;}
+async function teacherInit(){
+ st('Connecting teacher to live server…');
+ try{await makePeer();st('Connected. Tap “Start Camera & Mic”.');}catch(e){return}
+}
+async function studentJoin(){
+ st('Connecting to live class…');
+ try{await makePeer();}catch(e){return}
+ async function poll(){
+   if(joined)return;
+   try{
+     const r=await api('getLiveTeacherPeerId',{liveId,className:cls});
+     if(!r.success){st('Waiting for teacher to start camera…');return setTimeout(poll,2500)}
+     if(!r.peerId){st('Teacher is connected. Waiting for camera…');return setTimeout(poll,2000)}
+     teacherPeer=r.peerId;$('title').textContent=(r.title||'Live Class')+' • '+(r.teacherName||'Teacher');
+     const call=peer.call(teacherPeer);
+     call.on('stream',s=>{$('remote').srcObject=s;joined=true;st('🟢 Live video connected.');});
+     call.on('close',()=>{joined=false;st('Teacher connection ended. Waiting…');setTimeout(poll,2000)});
+     call.on('error',()=>{joined=false;setTimeout(poll,2000)});
+   }catch(e){setTimeout(poll,3000)}
+ }
+ poll();
+}
+async function sendDoubt(){const text=$('q').value.trim();if(!text)return;try{const r=await api('sendLiveDoubt',{liveId,studentId:userId,studentName:name,className:cls,question:text});if(r.success){$('q').value='';refreshDoubts()}else alert(r.message||'Could not send doubt.')}catch(e){alert('Could not reach school server.')}}
+async function refreshDoubts(){try{const a=role==='teacher'?await api('getLiveDoubts',{liveId,teacherId:userId}):await api('getStudentLiveDoubts',{liveId,studentId:userId});$('comments').innerHTML=(a||[]).map(x=>role==='teacher'?`<div class="comment"><b>${x.StudentName}</b>: ${x.Question}<br><small>${x.Reply||'Waiting for teacher reply…'}</small>${x.Reply?'':'<br><button class="btn" onclick="replyDoubt(\''+x.DoubtID+'\')">Reply</button>'}</div>`:`<div class="comment"><b>You:</b> ${x.Question}<br><small>${x.Reply||'Waiting for teacher reply…'}</small></div>`).join('')||'<small>No doubts yet.</small>';}catch(e){}}
+async function replyDoubt(id){const reply=prompt('Reply to student:');if(reply===null)return;await api('replyLiveDoubt',{doubtId:id,teacherId:userId,reply});refreshDoubts()}
+$('send').onclick=sendDoubt;
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter')sendDoubt()});
+$('stopCam').onclick=stopTeacherCamera;
+window.addEventListener('beforeunload',()=>{if(stream)stream.getTracks().forEach(t=>t.stop());if(peer)peer.destroy()});
+(async function(){
+ setupUI();
+ if(!liveId||!userId||!appUrl)return fail('Missing live class information. Please open Live from the School App.');
+ if(role==='teacher')await teacherInit();else await studentJoin();
+ refreshDoubts();setInterval(refreshDoubts,3000);
+})();
+</script>
+</body></html>
